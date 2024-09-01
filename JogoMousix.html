@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/4316bbc93a.js" crossorigin="anonymous"></script>
+    <link rel="website icon" type="png" href="https://github.com/PiperOneShot/Mousix/blob/main/Mousix.png?raw=true">
+    <title>Mousix</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');        
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            background-color: var(--ultradarkbrown);
+            scroll-behavior: smooth;
+        }
+        *:not(i) {
+            font-family: 'Nunito';
+            color: white;
+            padding: 0;
+            margin: 0;
+        }
+
+        /* Geral */
+        button {
+            background-color: var(--brown);
+            border: 2px solid var(--darkbrown);
+        }
+        main:not(.submenu, .menuSecondary) {
+            display: flex;
+            flex-direction: column;
+            padding-top: 150px;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        ::selection {
+            background-color: var(--green);
+        }
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Cores */
+        :root {
+            --ultradarkbrown: #4d1700;
+            --darkbrown: #6A2202;
+            --mediumbrown: #933603;
+            --brown: #B64702;
+            --lightbrown: #E97132;
+            --green: #92D050;
+        }
+
+        /* Texto */
+        h1 { font-size: x-large; font-weight: 800; }
+        h2 { font-size: larger; font-weight: 700; }
+        h3 { font-size: large; font-weight: 600; }
+        p { font-size: 0.925em; font-weight: 500; }
+        button { font-size: 1em;}
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            position: fixed;
+            align-items: center;
+            justify-content: space-around;
+            width: 100%;
+            height: 7.5vh;
+            bottom: 0;
+            background-color: var(--darkbrown);
+            border-top: 7.5px solid var(--green);
+            box-sizing: border-box;
+        }
+        .toolbar button {
+            display: flex;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+            width: 50px;
+            border-radius: calc(100% / 2.75);
+            transform: translateY(-50%);
+            transition: 0.5s;
+        }
+        .toolbar button.active {
+            width: 60px;
+            height: 60px;
+            margin: 0;
+            background-color: var(--green) !important;
+            border: 7.5px solid white;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            align-items: center;
+            width: 100%;
+            background-color: var(--darkbrown);
+            z-index: 1;
+        }
+        header div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        header div :is(progress, span) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        header div span {
+            width: 10%;
+            font-size: 1em;
+            color: var(--green);
+        }
+
+        /* Amizade e Felicidade */
+        .allBar { height: 60px; }
+
+        .bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px;
+            padding: 5px;
+        }
+
+        .bar p { width: 10%; }
+        .bar progress { width: 60%; }
+
+        progress {
+            appearance: none;
+            -webkit-appearance: none;
+            background-color: var(--brown);
+            color: var(--green);
+            height: 15px;
+            border-radius: 15px;
+            border: none;
+            overflow: hidden;
+        }
+
+        progress::-webkit-progress-bar {
+            background-color: var(--brown);
+            border-radius: 15px;
+        }
+
+        progress::-webkit-progress-value {
+            background-color: var(--green);
+            border-radius: 15px;
+        }
+
+        progress::-moz-progress-bar {
+            background-color: var(--green);
+            border-radius: 15px;
+        }
+        
+        .separator {
+            height: 60%;
+            width: 10px;
+            border-radius: 10px;
+            background-color: var(--brown);
+        }
+
+        /* Títulos e Menu Secundário */
+        .topbar {
+            flex-direction: column;
+            width: 100%;
+        }
+        .topbar h1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 40px;
+            background-color: var(--mediumbrown);
+        }
+        .openMenuSecondary {
+            width: 100%;
+            height: 30px;
+        }
+
+        /* Menu Secundário */
+        .menuSecondary {
+            display: flex;
+            position: relative;
+            width: 100%;
+            flex-direction: column;
+            justify-content: start;
+            padding-left: 5px;
+            padding-right: 5px;
+            height: 0;
+            overflow-y: auto;
+            transition: height 0.5s;
+            background-color: var(--lightbrown);
+            box-sizing: border-box;
+        }
+
+        .menuSecondary.open { height: 25vh; }
+        .menuSecondary *:first-child:not(img) { margin-top: 10px; }
+
+        .menuSecondary button {
+            width: 97.5%;
+            padding: 5px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 7px var(--darkbrown);
+        }
+        .menuSecondary button:active {
+            box-shadow: none;
+            transform: translate(0, 7px);
+        }
+
+        .menuSecondary h2 {
+            display: flex;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .mousses {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            flex-direction: row;
+            width: 100%
+        }
+        .mousses img {
+            width: 12.5vh;
+            height: auto;
+        }
+
+        .greenBar {
+            display: block;
+            position: absolute;
+            background-color: var(--green);
+            height: 7.5px;
+            width: 100%;
+            transition: 0.5s;
+            bottom: 0;
+            transform: translateY(5px);
+        }
+        .menuSecondary.open .greenBar {
+            top: calc(130px + 25vh);
+        }
+
+        #mou {
+            position: absolute;
+            top: 27.5%;
+            height: 375px;
+            width: auto;
+            z-index: 0;
+        }
+
+        /* Skins */
+        #skins {
+            display: flex;
+            align-items: start;
+        }
+
+        #skins img {
+            filter: saturate(2);
+            height: 25vh;
+            width: auto;
+        }
+
+        #skins .bronzeSkin, #skins .prataSkin, #skins .ouroSkin {
+            display: grid;
+            width: 100%;
+            grid-template-columns: repeat(auto-fit, minmax(20vh, 1fr));
+            gap: 16px;
+        }
+
+        #skins .bronzeSkin div, #skins .prataSkin div, #skins .ouroSkin div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 20px;
+            padding: 10px;
+            height: 35vh;
+            background-color: var(--mediumbrown);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #skins .bronzeSkin div img, #skins .prataSkin div img, #skins .ouroSkin div img {
+            height: 80%;
+            width: auto;
+        }
+
+        #skins .bronzeSkin div span, #skins .prataSkin div span, #skins .ouroSkin div span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--mediumbrown);
+            border: 3px solid var(--green);
+            box-shadow: 0 5px var(--green);
+            margin-bottom: 5px;
+            width: 100%;
+            height: 20%;
+            border-radius: 15px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #skins .bronzeSkin div span:active, #skins .prataSkin div span:active, #skins .ouroSkin div span:active {
+            transform: translate(0, 5px);
+            box-shadow: none;
+        }
+
+        /* Submenu */
+        .submenu { padding-left: 10px; padding-right: 10px; }
+        .submenu h1, .content, .submenu p:not(.content p, .v p) { padding: 10px; }
+
+        .submenu h1 {
+            border-top-right-radius: 15px;
+            border-top-left-radius: 15px;
+            background-color: var(--mediumbrown);
+        }
+        .submenu img {
+            width: 100%;
+            height: auto;
+        }
+
+        .content, .submenu p:not(.content p, .v p) {
+            border-bottom-right-radius: 15px;
+            border-bottom-left-radius: 15px;
+            background-color: var(--darkbrown);
+            border: 2px solid var(--mediumbrown);
+            margin-bottom: 2vh;
+        }
+        
+        .v {
+            border-bottom-right-radius: 15px;
+            border-bottom-left-radius: 15px;
+            background-color: var(--darkbrown);
+            border: 2px solid var(--mediumbrown);
+            padding: 10px;
+        }
+        .separatorV {
+            display: block;
+            background-color: var(--mediumbrown);
+            height: 2px;
+            width: 100%;
+            margin-top: 1.75vh;
+            margin-bottom: 1.75vh;
+        }
+
+        /* Jogo */
+        #gameArea {
+            position: relative;
+            width: 100%;
+            height: 56.5vh;
+            background-color: var(--lightbrown);
+            border: 2px solid var(--brown);
+            overflow: hidden;
+            margin: 0 auto;
+            border-radius: 15px;
+        }
+        #player {
+            position: absolute;
+            bottom: 20px;
+            width: 50px;
+            height: auto;
+            transition: left 0.1s;
+        }
+        .food {
+            position: absolute;
+            width: 40px;
+            height: auto;
+            transition: 10ms;
+        }
+        #score {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            width: 100%;
+        }
+        .button {
+            display: block;
+            font-size: 18px;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            margin: 10px;
+            border-radius: 40%;
+        }
+        .btnControl {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            justify-content: space-between;
+            width: calc(100% - 20px);
+            bottom: 14.5vh;
+        }
+
+        #points :is(progress, div) {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        #account div {
+            display: grid;
+            grid-template-areas: 
+                'conquista texto'
+                'progresso texto'
+            ;
+            grid-template-columns: 75% 25%;
+            width: 100%;
+            border-radius: 15px;
+            background-color: var(--mediumbrown);
+            padding: 5px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+        #account h2 {
+            grid-area: conquista;
+            background-color: var(--brown);
+            border-radius: 15px;
+        }
+
+        #account progress {
+            grid-area: progresso;
+            width: 85%;
+        }
+
+        #account p {
+            grid-area: texto;
+            border-radius: 15px;
+            background-color: var(--brown);
+        }
+        #account div * {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <img id="mou" oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Default%20(20240825125700).png?raw=true">
+
+    <header>
+        <div class="allBar">
+            <div class="bar">
+                <span><i class="fas fa-heart"></i></span>
+                <progress id="a" value="0" max="100"></progress>
+                <p id="fA">0/3</p>
+            </div>
+            <span class="separator"></span>
+            <div class="bar">
+                <span><i class="fas fa-face-smile"></i></span>
+                <progress id="f" value="0" max="100"></progress>
+                <p id="fP">0/4</p>
+            </div>
+        </div>
+        <div class="topbar">
+            <h1 id="H1">Página Inicial</h1>
+            <button id="openMenuSecondaryBtn" class="openMenuSecondary" onclick="openMenuSecondary('aboutUs', this)">Sobre Nós <i id="invArrowUp" class="fas fa-arrow-down"></i></button>
+        </div>
+
+        <div id="inventory" class="menuSecondary">
+            <h2>Inventário de Mousses</h2>
+            <p style="width: 100%;">Compre mousses da Mousix se adquirir mais!</p>
+            <div class="mousses">
+                <img onclick="feedMou(this)" src="https://github.com/PiperOneShot/Mousix/blob/main/Mousse_Jogo.png?raw=true">
+                <img onclick="feedMou(this)" src="https://github.com/PiperOneShot/Mousix/blob/main/Mousse_Jogo.png?raw=true">
+                <img onclick="feedMou(this)" src="https://github.com/PiperOneShot/Mousix/blob/main/Mousse_Jogo.png?raw=true">
+            </div>
+        </div>
+    
+        <div id="aboutUs" class="menuSecondary">
+            <button onclick="openSubMenu('about', 'Quem somos?')">Quem somos?</button>
+            <button onclick="openSubMenu('ls', 'Logomarca e Slogan')">Logomarca e Slogan</button>
+            <button onclick="openSubMenu('mvv', 'Missão, Visão e Valores')">Missão, Visão e Valores</button>
+            <button onclick="openSubMenu('product', 'Produto')">Produto</button>
+            <button onclick="openSubMenu('team', 'Equipe')">Equipe</button>            
+        </div>
+
+        <div id="points" class="menuSecondary">
+            <p>A cada 50 pontos, você aumenta em 1 a barra de felicidade da Mou :D</p>
+        </div>
+
+        <div id="collection" class="menuSecondary">
+            <p>A cada mousse, você pode sortear 2 ou 3 visuais! Quem sabe, você descubra o segredo.</p>
+        </div>
+
+        <div id="discount" class="menuSecondary">
+            <p>Se você conseguir completar as conquistas abaixo, você ganhará 50% de desconto no próximo Mousse!</p>
+        </div>
+
+        <span class="greenBar"></span>
+    </header>
+
+    <!-- Food -->
+    <main id="food" style="display:none;">
+    </main>
+
+    <!-- Games -->
+    <main id="games" style="display:none;">
+        <h1 id="score">Pontuação: 0</h1>
+        <div id="gameArea">
+            <img id="player" src="https://github.com/PiperOneShot/Mousix/blob/main/MouGame.png?raw=true">
+        </div>
+        <div class="btnControl">
+            <button class="button" onmousedown="startMoveLeft()" onmouseup="stopMove()"><i class="fas fa-arrow-left"></i></button>
+            <button class="button" onmousedown="startMoveRight()" onmouseup="stopMove()"><i class="fas fa-arrow-right"></i></button>
+        </div>
+    </main>
+
+    <!-- Home -->
+    <main id="home">
+        
+    </main>
+
+    <main id="about" class="submenu" style="display: none;">
+        <h1>Quem somos?</h1>
+        <p>
+            No Instituto J&F, a Mousix, nasceu com a missão de encantar paladares e despertar os sentidos.<br><br>
+            Nosso produto, elaborado com ingredientes selecionados e muito carinho, são o resultado da paixão pela culinária e do compromisso com a qualidade. <br><br>
+            Cada criação da Mousix é uma sinfonia de sabores, cuidadosamente composta por nossos talentosos alunos. Ao adquirir nossos produtos, você não apenas desfruta de um sabor único, mas também contribui para o desenvolvimento de jovens talentos e para o crescimento de nossa comunidade.
+        </p>
+    </main>
+
+    <main id="ls" class="submenu" style="display: none;">
+        <h1>Logomarca</h1>
+        <div class="content">
+            <p>A logomarca representa o nosso produto, nome, slogan e diferenciais.</p>
+            <img src="https://github.com/PiperOneShot/Mousix/blob/main/Mousix.png?raw=true">
+        </div>
+        <h1>Slogan</h1>
+            <p>Nosso slogan, “O mousse seis estrelas”, captura a essência do que oferecemos. Ele resume a experiência que proporcionamos e a promessa que fazemos aos nossos clientes. Seja uma expressão de qualidade, prazer ou inovação.<br><br>
+                Ele reflete nossa dedicação em entregar não apenas uma sobremesa, mas um momento de pura alegria e satisfação.
+            </p>
+    </main>
+
+    <main id="mvv" class="submenu" style="display: none;">
+        <h1>Missão, Visão e Valores</h1>
+        <p>Na Mousix, acreditamos que o verdadeiro sucesso não se mede apenas pelos números, mas pelo impacto positivo que geramos no mundo ao nosso redor.</p>
+        
+        <!-- Missão -->
+        <h1>Nossa Missão</h1>
+        <p>“Encantar os clientes com excelência e qualidade, superando as expectativas e oferecendo uma experiência única de consumo de mousse, trazendo: praticidade, doçura e leveza.”</p>
+
+        <!-- Visão -->
+        <h1>Nossa Visão</h1>
+        <p>"Ser a melhor empresa de mousse de chocolate, trazendo uma combinação de sabores, tornando a experiência única.”</p>
+
+        <!-- Valores -->
+        <h1>Nossos Valores</h1>
+        <div class="v">
+            <h2>Responsabilidade</h2>
+            <p>Ser comprometido com os clientes e garantir uma mousse acima do esperado.</p>
+            <span class="separatorV"></span>
+            <h2>Lealdade</h2>
+            <p>Apoiar a empresa e estar compromissado com ela independente da escolha que tomarmos e do resultado.</p>
+            <span class="separatorV"></span>
+            <h2>Resiliência</h2>
+            <p>Não desistir com facilidade, se adaptando à mudanças.</p>
+            <span class="separatorV"></span>
+            <h2>Integridade</h2>
+            <p>Agir com honestidade e transparência em todas as interações.</p>
+            <span class="separatorV"></span>
+            <h2>Empatia</h2>
+            <p>Pensar sempre no próximo antes de tomar qualquer decisão.</p>
+        </div>
+    </main>
+
+    <main id="product" class="submenu" style="display: none;">
+        <h1>Produto</h1>
+        <p>Em breve...</p>
+    </main>
+
+    <main id="team" class="submenu" style="display: none;">
+        <h1>Equipes</h1>
+        <p>Em breve...</p>
+        <h1>Organograma</h1>
+        <div class="content">
+            <img src="https://github.com/PiperOneShot/Mousix/blob/main/OrganogramaMousix.png?raw=true">
+        </div>
+    </main>
+
+
+    <!-- Skins -->
+    <main id="skins" style="display:none;">
+        <h1>Visuais</h1>
+        <h2>Bronze</h2>
+        <div class="bronzeSkin">
+            <div id="commonDiv">
+                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Default%20(20240825125700).png?raw=true">
+                <span onclick="selectSkin('common')">Padrão</span>
+            </div>
+            <div id="cozinheiraDiv">
+                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Cozinheira%20(20240825102621).png?raw=true">
+                <span onclick="selectSkin('cozinheira')">Cozinheira</span>
+            </div>
+            <div id="estudanteDiv">
+                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Estudante%20(20240825102511).png?raw=true">
+                <span onclick="selectSkin('estudante')">Estudante</span>
+            </div>
+            <div id="esportistaDiv">
+                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Tenista%20(20240825010309).png?raw=true">
+                <span onclick="selectSkin('esportista')">Esportista</span>
+            </div>
+        </div>
+        <h2>Prata</h2>
+        <div class="prataSkin">
+            <div id="feiticeiraDiv">
+                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Feiticeira%20%20(20240825102418).png?raw=true">
+                <span onclick="selectSkin('feiticeira')">Feiticeira</span>
+            </div>
+            <div id="hkDiv">
+                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/HK%20(20240825034919).png?raw=true">
+                <span onclick="selectSkin('hk')">Hello Kitty</span>
+            </div>
+            <div id="orientalDiv">
+                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Oriental%20(20240825102453).png?raw=true">
+                <span onclick="selectSkin('oriental')">Oriental</span>
+            </div>
+        </div>
+        <h2>Ouro</h2>
+        <div class="ouroSkin">
+            <div id="primaveraDiv">
+                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Primavera%20%20(20240825053941).png?raw=true">
+                <span onclick="selectSkin('primavera')">Primavera</span>
+            </div>
+        </div>
+    </main>
+
+    <!-- Account -->
+    <main id="account" style="display:none;">
+        <h1>Conquistas</h1>
+        <div>
+            <h2>Preencha toda barra de amizade</h2>
+            <progress id="a"></progress>
+            <p id="fA">0/3</p>
+        </div>
+        <div>
+            <h2>Preencha toda barra de felicidade</h2>
+            <progress id="f"></progress>
+            <p id="fP">0/4</p>
+        </div>
+        <div>
+            <h2>Consiga o visual secreto</h2>
+            <p style="font-size: small;">Incompleto</p>
+        </div>
+    </main>
+    
+    
+    <!-- Toolbar -->
+    <nav class="toolbar">
+        <button class="btnMenu" onclick="openMenu('food', this, 'Alimentação')"><i class="fas fa-utensils"></i></button>
+        <button class="btnMenu" onclick="openMenu('games', this, 'Jogo')"><i class="fas fa-gamepad"></i></button>
+        <button class="btnMenu" onclick="openMenu('home', this, 'Página Inicial')"><i class="fas fa-house"></i></button>
+        <button class="btnMenu" onclick="openMenu('skins', this, 'Skins')"><i class="fas fa-shirt"></i></button>
+        <button class="btnMenu" onclick="openMenu('account', this, 'Conta')"><i class="fas fa-user"></i></button>
+    </nav>
+</body>
+    <script>
+        // Variáveis
+            // Geral
+            const menus = document.querySelectorAll('main');
+            const submenus = Array.from(document.getElementsByClassName('submenu'));
+            const menuButtons = document.querySelectorAll('.btnMenu');
+            const mou = document.getElementById('mou');
+            let mainTitle = document.getElementById('H1');
+            let mainM2 = document.getElementById('openMenuSecondaryBtn');
+
+            // Alimentação 
+            const amizade = document.getElementById('a');
+            const amizadeP = document.getElementById('fA');
+
+            // Jogo
+                // Área de Jogo
+                let isGamePaused = true;
+                let foodInterval;
+                const gameArea = document.getElementById('gameArea');
+
+                // Player
+                const player = document.getElementById('player');
+                let playerPosition = gameArea.clientWidth / 2 - player.clientWidth / 2;
+
+                // Comidas
+                let moveInterval;
+
+                // Controles
+                const leftButton = document.querySelector('.btnControl .button:first-child');
+                const rightButton = document.querySelector('.btnControl .button:last-child');
+
+                // Pontuação
+                let score = 0;
+                const scoreDisplay = document.getElementById('score');
+
+        // Funções Gerais
+        function openMenu(menu, button) {
+            let selectMenu = document.getElementById(menu);
+            
+            menus.forEach(element => {
+                element.style.display = 'none';
+                element.style.paddingBottom = '0'
+            });
+            
+            selectMenu.style.display = 'block';
+            selectMenu.style.paddingBottom = '87.5px'
+
+            menuButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
+
+            let actualMenuTitle;
+            let actualMenuSecondary;
+            let secondaryButtonText;
+            
+            if (menu === 'food') {
+                actualMenuTitle = "Alimentação";
+                actualMenuSecondary = "inventory";
+                secondaryButtonText = "Inventário";
+                mou.style.display = 'block';
+            } else if (menu === 'home') {
+                actualMenuTitle = "Página Inicial";
+                actualMenuSecondary = "aboutUs";
+                secondaryButtonText = "Sobre Nós";
+                mou.style.display = 'block';
+            } else if (menu === 'games') {
+                actualMenuTitle = "Jogo";
+                actualMenuSecondary = "points";
+                secondaryButtonText = "Pontos";
+                mou.style.display = 'none';
+            } else if (menu === 'skins') {
+                actualMenuTitle = "Visuais";
+                actualMenuSecondary = "collection";
+                secondaryButtonText = "Coleção";
+                mou.style.display = 'none';
+            } else {
+                actualMenuTitle = "Conta";
+                actualMenuSecondary = "discount";
+                secondaryButtonText = "Descontos";
+                mou.style.display = 'none';
+            }
+
+            mainTitle.innerHTML = actualMenuTitle;
+
+            const openMenus = document.querySelectorAll('.menuSecondary.open');
+            openMenus.forEach(menu => {
+                menu.classList.remove('open');
+            });
+
+            const secondaryButton = document.getElementById('openMenuSecondaryBtn');
+            if (secondaryButton) {
+                secondaryButton.innerHTML = `${secondaryButtonText} <i class='fas fa-arrow-down'></i>`;
+                secondaryButton.setAttribute('onclick', `openMenuSecondary('${actualMenuSecondary}', this)`);
+            }
+
+            checkGameStatus();
+        }
+
+        function openMenuSecondary(actualMenuSecondary, menuSecondaryBtn) {
+            const menu = document.getElementById(actualMenuSecondary);
+            menu.classList.toggle('open');
+            checkGameStatus();
+        }
+
+        function openSubMenu(submenu, title) {
+            const allMenuSecondary = document.querySelectorAll('.menuSecondary');
+            allMenuSecondary.forEach(menu => {
+                menu.classList.remove('open');
+            });
+            menus.forEach(element => {
+                element.style.paddingBottom = '0'
+            });
+            submenus.forEach(element => {
+                element.style.display = 'none';
+            });
+
+            let selectSubMenu = document.getElementById(submenu);
+            selectSubMenu.style.display = 'block';
+            selectSubMenu.style.paddingBottom = '87.5px';
+
+            mou.style.display = 'none';
+        }
+
+        // Alimentação
+        function feedMou(btn) {
+            const incrementValue = 33.4;
+            amizade.value = Math.min(amizade.value + incrementValue, 100);
+
+            let currentProgress = Math.floor(amizade.value / 33.3);
+            amizadeP.innerHTML = `${currentProgress}/3`;
+
+            if (currentProgress = 1) {
+                btn.onclick = null;
+                btn.style.opacity = '0.5'
+                btn.style.cursor = 'not-allowed';
+            }
+        }
+
+        // Skins
+        function selectSkin(skinName) {
+            const div = document.getElementById(`${skinName}Div`);
+            const imgSrc = div.querySelector('img').src;
+            mou.src = imgSrc;
+        }
+
+        // Jogo
+        player.style.left = playerPosition + 'px';
+
+        // Controles
+        function moveLeft() {
+            if (playerPosition > 0) {
+                playerPosition -= 5;
+                player.style.left = playerPosition + 'px';
+            }
+        }
+
+        function moveRight() {
+            if (playerPosition < gameArea.clientWidth - player.clientWidth) {
+                playerPosition += 5;
+                player.style.left = playerPosition + 'px';
+            }
+        }
+
+        function startMoveLeft() {
+            stopMove();
+            moveInterval = setInterval(moveLeft, 20);
+        }
+
+        function startMoveRight() {
+            stopMove();
+            moveInterval = setInterval(moveRight, 20);
+        }
+
+        function stopMove() {
+            clearInterval(moveInterval);
+        }
+
+        leftButton.addEventListener('mousedown', startMoveLeft);
+        leftButton.addEventListener('mouseup', stopMove);
+        rightButton.addEventListener('mousedown', startMoveRight);
+        rightButton.addEventListener('mouseup', stopMove);
+
+        leftButton.addEventListener('touchstart', function(event) {
+            event.preventDefault(); 
+            startMoveLeft();
+        });
+
+        leftButton.addEventListener('touchend', function(event) {
+            event.preventDefault();
+            stopMove();
+        });
+
+        rightButton.addEventListener('touchstart', function(event) {
+            event.preventDefault();
+            startMoveRight();
+        });
+
+        rightButton.addEventListener('touchend', function(event) {
+            event.preventDefault();
+            stopMove();
+        });
+
+        // Comidas
+        function dropFood() {
+            if (isGamePaused) return;
+
+            const food = document.createElement('img');
+            food.classList.add('food');
+
+            // Randomize food type
+            const foodType = Math.floor(Math.random() * 3) + 1;
+            if (foodType === 1) {
+                food.src = 'https://github.com/PiperOneShot/Mousix/blob/main/image.png?raw=true';
+            } else if (foodType === 2) {
+                food.src = 'https://github.com/PiperOneShot/Mousix/blob/main/burritoSwift.png?raw=true';
+            } else {
+                food.src = 'https://github.com/PiperOneShot/Mousix/blob/main/pudimSwift.png?raw=true';
+            }
+
+            let validPosition = false;
+            let attempts = 0;
+            while (!validPosition && attempts < 100) {
+                food.style.left = Math.random() * (gameArea.clientWidth - 40) + 'px';
+                food.style.top = '0px';
+                validPosition = true;
+                
+                const existingFoods = document.querySelectorAll('.food');
+                existingFoods.forEach(existingFood => {
+                    const existingFoodRect = existingFood.getBoundingClientRect();
+                    const newFoodRect = food.getBoundingClientRect();
+
+                    const distanceX = Math.abs(existingFoodRect.left - newFoodRect.left);
+                    const distanceY = Math.abs(existingFoodRect.top - newFoodRect.top);
+
+                    if (distanceX < 60 && distanceY < 60) {
+                        validPosition = false;
+                    }
+                });
+
+                attempts++;
+            }
+
+            gameArea.appendChild(food);
+
+            let foodFallInterval = setInterval(() => {
+                if (isGamePaused) return;
+
+                const foodTop = parseInt(window.getComputedStyle(food).getPropertyValue('top')) || 0;
+                if (foodTop < gameArea.clientHeight - 40) {
+                    food.style.top = (foodTop + 5) + 'px';
+
+                    if (checkCollision(player, food)) {
+                        clearInterval(foodFallInterval);
+                        gameArea.removeChild(food);
+
+                        if (foodType === 1) {
+                            updateScore(2);
+                        } else {
+                            updateScore(-2);
+                        }
+                        scoreDisplay.innerText = `Pontuação: ${score}`;
+                    }
+                } else {
+                    clearInterval(foodFallInterval);
+                    gameArea.removeChild(food);
+                }
+            }, 50);
+        }
+
+        function checkCollision(player, food) {
+            const playerRect = player.getBoundingClientRect();
+            const foodRect = food.getBoundingClientRect();
+
+            return !(
+                playerRect.top > foodRect.bottom ||
+                playerRect.bottom < foodRect.top ||
+                playerRect.left > foodRect.right ||
+                playerRect.right < foodRect.left
+            );
+        }
+
+        function checkGameStatus() {
+            const gamesMenu = document.getElementById('games');
+            if (gamesMenu.style.display === 'none') {
+                isGamePaused = true;
+                clearInterval(foodInterval); // Pausar a queda das comidas
+            } else {
+                isGamePaused = false;
+                startDroppingFood(); // Retomar a queda das comidas
+            }
+        }
+
+        function startDroppingFood() {
+            foodInterval = setInterval(() => {
+                if (!isGamePaused) {
+                    dropFood();
+                }
+            }, 1500);
+        }
+
+        // Pontuação
+        startDroppingFood();
+
+        let scoresChecked = [];
+
+        function checkScore() {
+            const felicidade = document.getElementById('f');
+            const felicidadeP = document.getElementById('fP');
+            const incrementValue = 25;
+            const validScores = [50, 100, 150, 200];
+
+            if (validScores.includes(score) && !scoresChecked.includes(score)) {
+                felicidade.value = Math.min(felicidade.value + incrementValue, 100);
+                let currentProgress = Math.floor(felicidade.value / 25); // Atualizar após o incremento
+                felicidadeP.innerHTML = `${currentProgress}/4`;
+
+                scoresChecked.push(score);
+            }
+        }
+
+        function updateScore(points) {
+            score += points;
+            scoreDisplay.innerText = `Pontuação: ${score}`;
+            checkScore();
+        }
+    </script>
+</body>
+</html>
