@@ -914,7 +914,7 @@
 
                 const foodTop = parseInt(window.getComputedStyle(food).getPropertyValue('top')) || 0;
                 if (foodTop < gameArea.clientHeight - 40) {
-                    food.style.top = (foodTop + 5) + 'px';
+                    food.style.top = (foodTop + 7.5) + 'px';
 
                     if (checkCollision(player, food)) {
                         clearInterval(foodFallInterval);
@@ -962,7 +962,7 @@
                 if (!isGamePaused) {
                     dropFood();
                 }
-            }, 1500);
+            }, 1250);
         }
 
         // Pontuação
