@@ -940,7 +940,7 @@
 
                 const foodTop = parseInt(window.getComputedStyle(food).getPropertyValue('top')) || 0;
                 if (foodTop < gameArea.clientHeight - 40) {
-                    food.style.top = (foodTop + 7.5) + 'px';
+                    food.style.top = (foodTop + 10) + 'px';
 
                     if (checkCollision(player, food)) {
                         clearInterval(foodFallInterval);
@@ -949,7 +949,7 @@
                         if (foodType === 1) {
                             updateScore(2);
                         } else {
-                            updateScore(-2);
+                            updateScore(-1);
                         }
                         scoreDisplay.innerText = `Pontuação: ${score}`;
                     }
