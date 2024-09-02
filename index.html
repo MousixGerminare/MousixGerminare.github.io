@@ -429,7 +429,6 @@
 
         #account progress {
             grid-area: progresso;
-            width: 85%;
         }
 
         #account p {
@@ -686,7 +685,6 @@
             const felicidadeAccount = document.querySelector("#account #f");
             const felicidadeTextAccount = document.querySelector("#account #fP");
             
-
             // Alimentação 
             const amizade = document.getElementById('a');
             const amizadeP = document.getElementById('fA');
@@ -803,7 +801,7 @@
 
         function updateAmizadeBar(incrementValue) {
             amizadeHeader.value = Math.min(amizadeHeader.value + incrementValue, 100);
-            amizadeAccount.value = amizadeHeader.value; // Sincroniza com a barra de amizade da conta
+            amizadeAccount.value = amizadeHeader.value;
         
             const currentProgress = Math.floor(amizadeHeader.value / 33.3);
             amizadeTextHeader.innerHTML = `${currentProgress}/3`;
