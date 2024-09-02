@@ -144,6 +144,7 @@
             border-radius: 15px;
             border: none;
             overflow: hidden;
+            transition: 0.5s;
         }
 
         progress::-webkit-progress-bar {
@@ -674,6 +675,18 @@
             let mainTitle = document.getElementById('H1');
             let mainM2 = document.getElementById('openMenuSecondaryBtn');
 
+            // Barras 
+            const amizadeHeader = document.querySelector("header #a");
+            const amizadeTextHeader = document.querySelector("header #fA");
+            const amizadeAccount = document.querySelector("#account #a");
+            const amizadeTextAccount = document.querySelector("#account #fA");
+            
+            const felicidadeHeader = document.querySelector("header #f");
+            const felicidadeTextHeader = document.querySelector("header #fP");
+            const felicidadeAccount = document.querySelector("#account #f");
+            const felicidadeTextAccount = document.querySelector("#account #fP");
+            
+
             // Alimentação 
             const amizade = document.getElementById('a');
             const amizadeP = document.getElementById('fA');
@@ -788,17 +801,32 @@
             mou.style.display = 'none';
         }
 
+        function updateAmizadeBar(incrementValue) {
+            amizadeHeader.value = Math.min(amizadeHeader.value + incrementValue, 100);
+            amizadeAccount.value = amizadeHeader.value; // Sincroniza com a barra de amizade da conta
+        
+            const currentProgress = Math.floor(amizadeHeader.value / 33.3);
+            amizadeTextHeader.innerHTML = `${currentProgress}/3`;
+            amizadeTextAccount.innerHTML = `${currentProgress}/3`;
+        }
+        
+        function updateFelicidadeBar(incrementValue) {
+            felicidadeHeader.value = Math.min(felicidadeHeader.value + incrementValue, 100);
+            felicidadeAccount.value = felicidadeHeader.value; // Sincroniza com a barra de felicidade da conta
+        
+            const currentProgress = Math.floor(felicidadeHeader.value / 25);
+            felicidadeTextHeader.innerHTML = `${currentProgress}/4`;
+            felicidadeTextAccount.innerHTML = `${currentProgress}/4`;
+        }
+
         // Alimentação
         function feedMou(btn) {
             const incrementValue = 33.4;
-            amizade.value = Math.min(amizade.value + incrementValue, 100);
-
-            let currentProgress = Math.floor(amizade.value / 33.3);
-            amizadeP.innerHTML = `${currentProgress}/3`;
-
-            if (currentProgress = 1) {
+            updateAmizadeBar(incrementValue);
+        
+            if (amizadeHeader.value >= 33.4) {
                 btn.onclick = null;
-                btn.style.opacity = '0.5'
+                btn.style.opacity = '0.5';
                 btn.style.cursor = 'not-allowed';
             }
         }
@@ -971,16 +999,9 @@
         let scoresChecked = [];
 
         function checkScore() {
-            const felicidade = document.getElementById('f');
-            const felicidadeP = document.getElementById('fP');
-            const incrementValue = 25;
             const validScores = [50, 100, 150, 200];
-
             if (validScores.includes(score) && !scoresChecked.includes(score)) {
-                felicidade.value = Math.min(felicidade.value + incrementValue, 100);
-                let currentProgress = Math.floor(felicidade.value / 25); // Atualizar após o incremento
-                felicidadeP.innerHTML = `${currentProgress}/4`;
-
+                updateFelicidadeBar(25);
                 scoresChecked.push(score);
             }
         }
