@@ -443,9 +443,51 @@
             margin: 5px;
             padding: 10px;
         }
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--ultradarkbrown);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+
+        #loading-screen h2 {
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 80%;
+            height: 15px;
+            background-color: var(--brown);
+            border-radius: 7.5px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0;
+            background-color: var(--green);
+            border-radius: 7.5px;
+            transition: 0.25s;
+        }
     </style>
 </head>
 <body>
+    <div id="loading-screen">
+        <h1>Mousix</h1>
+        <h2>O Mousse Seis Estrelas</h2>
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        <p id="loading-text">Carregando...</p>
+    </div>
+
     <img id="mou" oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Default%20(20240825125700).png?raw=true">
 
     <header>
@@ -1009,6 +1051,54 @@
             scoreDisplay.innerText = `Pontuação: ${score}`;
             checkScore();
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+        const progressBar = document.querySelector('.progress');
+        const loadingScreen = document.getElementById('loading-screen');
+        const content = document.getElementById('content');
+        const loadingText = document.getElementById('loading-text');
+
+        const frases = [
+            "Preparando algo incrível...",
+            "Ajustando os detalhes...",
+            "Quase lá...",
+            "Aguarde, estamos quase prontos!",
+            "Carregando com cuidado...",
+            "Prepare-se!"
+        ];
+
+        // Função para escolher uma frase aleatória
+        function fraseAleatoria() {
+            const indiceAleatorio = Math.floor(Math.random() * frases.length);
+            return frases[indiceAleatorio];
+        }
+
+        // Exibe uma frase aleatória com um delay a cada 3 segundos
+        function Delay() {
+            loadingText.innerText = fraseAleatoria();
+            setTimeout(Delay, 3000); // Altera a frase a cada 3 segundos
+        }
+
+        Delay();
+
+        let progress = 0;
+        let loadingComplete = false;
+
+        function updateProgress(percentage) {
+            progressBar.style.width = percentage + '%';
+        }
+
+        window.onload = function () {
+            loadingComplete = true;
+
+            updateProgress(100);
+
+            setTimeout(function () {
+                loadingScreen.style.display = 'none';
+                content.style.display = 'block';
+            }, 1000); 
+        };
+    });
     </script>
 </body>
 </html>
