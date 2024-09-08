@@ -391,6 +391,34 @@
             margin: 10px;
             border-radius: 40%;
         }
+
+        #pause {
+            position: fixed;
+            top: 182.5px;
+            right: 7.5px;
+        }
+
+        #textPause {
+            display: none;
+        }
+
+        #textPause.active {
+            display: flex;
+            position: absolute;
+            align-items: center;
+            justify-content: center;
+            left: 12.5%;
+            top: calc(182.5px + 56.5vh / 2.35);
+            width: 75%;
+            height: 10vh;
+            background-color: var(--brown);
+            border: 2px solid var(--darkbrown);
+            border-radius: 15px;
+            box-sizing: border-box;
+            font-size: 1.25em;
+            font-weight: bold;
+        }
+
         .btnControl {
             display: flex;
             align-items: center;
@@ -467,7 +495,7 @@
             background-color: var(--brown);
             border-radius: 7.5px;
             overflow: hidden;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .progress {
@@ -561,6 +589,8 @@
             <button class="button" onmousedown="startMoveLeft()" onmouseup="stopMove()"><i class="fas fa-arrow-left"></i></button>
             <button class="button" onmousedown="startMoveRight()" onmouseup="stopMove()"><i class="fas fa-arrow-right"></i></button>
         </div>
+        <button id="pause" class="button" onclick="togglePause()"><i class="fas fa-pause"></i></button>
+        <p id="textPause">Jogo Pausado</p>
     </main>
 
     <!-- Home -->
@@ -902,13 +932,17 @@
         }
 
         function startMoveLeft() {
-            stopMove();
-            moveInterval = setInterval(moveLeft, 20);
+            if (!isGamePaused) {  
+                stopMove();
+                moveInterval = setInterval(moveLeft, 20);
+            }
         }
 
         function startMoveRight() {
-            stopMove();
-            moveInterval = setInterval(moveRight, 20);
+            if (!isGamePaused) {  
+                stopMove();
+                moveInterval = setInterval(moveRight, 20);
+            }
         }
 
         function stopMove() {
@@ -1104,6 +1138,18 @@
             }, 1000); 
         };
     });
+
+    function togglePause() {
+        if (isGamePaused) {
+            isGamePaused = false;
+            startDroppingFood(); 
+            document.getElementById('textPause').classList.remove('active')
+        } else {
+            isGamePaused = true;
+            clearInterval(foodInterval);
+            document.getElementById('textPause').classList.add('active')
+        }
+    }
     </script>
 </body>
 </html>
