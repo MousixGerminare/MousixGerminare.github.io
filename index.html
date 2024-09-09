@@ -367,13 +367,13 @@
             bottom: 20px;
             width: 50px;
             height: auto;
-            transition: left 0.1s;
+            transition: 0.04s linear;
         }
         .food {
             position: absolute;
             width: 40px;
             height: auto;
-            transition: 10ms;
+            transition: 0.04s linear;
         }
         #score {
             display: flex;
@@ -1055,12 +1055,12 @@
 
         function checkGameStatus() {
             const gamesMenu = document.getElementById('games');
-            if (gamesMenu.style.display === 'none') {
-                isGamePaused = true;
-                clearInterval(foodInterval); // Pausar a queda das comidas
+            if (gamesMenu.style.display === 'block' && document.getElementById('textPause').classList.contains('active')) {
+                isGamePaused = true;  
+                clearInterval(foodInterval);  // Pausar a queda das comidas
             } else {
                 isGamePaused = false;
-                startDroppingFood(); // Retomar a queda das comidas
+                startDroppingFood();  // Retomar a queda das comidas
             }
         }
 
@@ -1106,13 +1106,11 @@
             "Prepare-se!"
         ];
 
-        // Função para escolher uma frase aleatória
         function fraseAleatoria() {
             const indiceAleatorio = Math.floor(Math.random() * frases.length);
             return frases[indiceAleatorio];
         }
 
-        // Exibe uma frase aleatória com um delay a cada 3 segundos
         function Delay() {
             loadingText.innerText = fraseAleatoria();
             setTimeout(Delay, 3000); // Altera a frase a cada 3 segundos
