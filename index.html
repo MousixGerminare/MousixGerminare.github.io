@@ -32,7 +32,7 @@
         main:not(.submenu, .menuSecondary) {
             display: flex;
             flex-direction: column;
-            padding-top: 150px;
+            padding-top: 50px;
             padding-left: 10px;
             padding-right: 10px;
             width: 100%;
@@ -49,6 +49,7 @@
         :root {
             --ultradarkbrown: #4d1700;
             --darkbrown: #6A2202;
+            --mediumdarkbroun: #7e2600;
             --mediumbrown: #933603;
             --brown: #B64702;
             --lightbrown: #E97132;
@@ -314,17 +315,33 @@
         }
 
         /* Submenu */
-        .submenu { padding-left: 10px; padding-right: 10px; }
+        .submenu { padding-left: 10px; padding-right: 10px; width: 100%; box-sizing: border-box;}
         .submenu h1, .content, .submenu p:not(.content p, .v p) { padding: 10px; }
 
         .submenu h1 {
             border-top-right-radius: 15px;
             border-top-left-radius: 15px;
             background-color: var(--mediumbrown);
+            width: 100%;
+            box-sizing: border-box;
         }
-        .submenu img {
+        .submenu :is(img, iframe) {
             width: 100%;
             height: auto;
+            border-radius: 25px;
+            border: 3px solid var(--green);
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .submenu :is(img):not(img[src="https://github.com/MousixGerminare/Mousix/blob/main/imagem%20(4).png?raw=true"]) {
+            background-color: var(--mediumdarkbroun);
+        } 
+        .submenu img[src="https://github.com/MousixGerminare/Mousix/blob/main/imagem%20(4).png?raw=true"] {
+            background-color: white;
+        }
+        .submenu iframe {
+            width: 100%;
+            aspect-ratio: 16 / 9;
         }
 
         .content, .submenu p:not(.content p, .v p) {
@@ -333,6 +350,8 @@
             background-color: var(--darkbrown);
             border: 2px solid var(--mediumbrown);
             margin-bottom: 2vh;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .v {
@@ -367,7 +386,6 @@
             bottom: 20px;
             width: 50px;
             height: auto;
-            transition: 0.04s linear;
         }
         .food {
             position: absolute;
@@ -512,6 +530,15 @@
     </style>
 </head>
 <body>
+    <div id="loginPopUp">
+        <h1>Entrar ou Cadastrar-se</h1>
+        <p>Seja bem vindo ao site da Mousix! Você pode começar cadastrando-se ou fazendo o login:</p>
+        <div>
+            <button id="cadastro">Cadastrar-se</button>
+            <button id="login">Login</button>
+        </div>
+    </div>
+
     <div id="loading-screen">
         <h1>Mousix</h1>
         <h2>O Mousse Seis Estrelas</h2>
@@ -521,7 +548,7 @@
         <p id="loading-text">Carregando...</p>
     </div>
 
-    <img id="mou" oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Default%20(20240825125700).png?raw=true">
+    <img id="mou" src="https://github.com/PiperOneShot/Mousix/blob/main/Default%20(20240825125700).png?raw=true">
 
     <header>
         <div class="allBar">
@@ -557,6 +584,7 @@
             <button onclick="openSubMenu('ls', 'Logomarca e Slogan')">Logomarca e Slogan</button>
             <button onclick="openSubMenu('mvv', 'Missão, Visão e Valores')">Missão, Visão e Valores</button>
             <button onclick="openSubMenu('product', 'Produto')">Produto</button>
+            <button onclick="openSubMenu('storytelling', 'Storytelling')">Storytelling</button>
             <button onclick="openSubMenu('team', 'Equipe')">Equipe</button>            
         </div>
 
@@ -601,9 +629,9 @@
     <main id="about" class="submenu" style="display: none;">
         <h1>Quem somos?</h1>
         <p>
-            No Instituto J&F, a Mousix, nasceu com a missão de encantar paladares e despertar os sentidos.<br><br>
-            Nosso produto, elaborado com ingredientes selecionados e muito carinho, são o resultado da paixão pela culinária e do compromisso com a qualidade. <br><br>
-            Cada criação da Mousix é uma sinfonia de sabores, cuidadosamente composta por nossos talentosos alunos. Ao adquirir nossos produtos, você não apenas desfruta de um sabor único, mas também contribui para o desenvolvimento de jovens talentos e para o crescimento de nossa comunidade.
+            A Mousix é uma empresa inovadora, criada pelos alunos do 6º Ano E da Germinare Business.<br><br>
+            Os alunos dedicaram-se a explorar os principais fatores que influenciam a escolha dos consumidores: preço, qualidade e atendimento.<br><br> 
+            Além disso, o projeto proporcionou momentos de aprendizado e diversão, permitindo que os estudantes aplicassem os 7 valores durante todo o processo de criação da empresa.
         </p>
     </main>
 
@@ -611,7 +639,7 @@
         <h1>Logomarca</h1>
         <div class="content">
             <p>A logomarca representa o nosso produto, nome, slogan e diferenciais.</p>
-            <img src="https://github.com/PiperOneShot/Mousix/blob/main/Mousix.png?raw=true">
+            <img src="https://github.com/MousixGerminare/Mousix/blob/main/imagem%20(4).png?raw=true">
         </div>
         <h1>Slogan</h1>
             <p>Nosso slogan, “O mousse seis estrelas”, captura a essência do que oferecemos. Ele resume a experiência que proporcionamos e a promessa que fazemos aos nossos clientes. Seja uma expressão de qualidade, prazer ou inovação.<br><br>
@@ -619,10 +647,7 @@
             </p>
     </main>
 
-    <main id="mvv" class="submenu" style="display: none;">
-        <h1>Missão, Visão e Valores</h1>
-        <p>Na Mousix, acreditamos que o verdadeiro sucesso não se mede apenas pelos números, mas pelo impacto positivo que geramos no mundo ao nosso redor.</p>
-        
+    <main id="mvv" class="submenu" style="display: none;">        
         <!-- Missão -->
         <h1>Nossa Missão</h1>
         <p>“Encantar os clientes com excelência e qualidade, superando as expectativas e oferecendo uma experiência única de consumo de mousse, trazendo: praticidade, doçura e leveza.”</p>
@@ -653,7 +678,28 @@
 
     <main id="product" class="submenu" style="display: none;">
         <h1>Produto</h1>
-        <p>Em breve...</p>
+        <div class="content">
+            <p>
+                Nosso produto, elaborado com ingredientes selecionados e muito carinho, são o resultado do compromisso com a qualidade. <br><br>
+                Cada criação da Mousix é uma sinfonia de sabores, cuidadosamente composta por nossos talentosos alunos. Ao adquirir nossos produtos, você não apenas desfruta de um sabor único, mas também contribui para o desenvolvimento de jovens talentos e para o crescimento de nossa comunidade.<br><br>
+            </p>
+            <h2>Diferenciais Competitivos</h2>
+            <p>
+                Temos três diferenciais competitivos: uma refrescante uva verde sem caroço, um saboroso tubete de avelã e um crocante Ovomaltine Rocks na cobertura.
+            </p>
+            <span class="separatorV"></span>
+            <img src="https://github.com/MousixGerminare/Mousix/blob/main/moussedescri%C3%A7%C3%A3o.png?raw=true">
+        </div>
+    </main>
+
+    <main id="storytelling" class="submenu" style="display: none;">
+        <h1>Storytelling</h1>
+        <div class="content">
+            <iframe
+            src="https://www.youtube.com/embed/_FnQzUuNzdg" 
+            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+            </iframe>                         
+        </p>
     </main>
 
     <main id="team" class="submenu" style="display: none;">
@@ -672,41 +718,41 @@
         <h2>Bronze</h2>
         <div class="bronzeSkin">
             <div id="commonDiv">
-                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Default%20(20240825125700).png?raw=true">
+                <img src="https://github.com/PiperOneShot/Mousix/blob/main/Default%20(20240825125700).png?raw=true">
                 <span onclick="selectSkin('common')">Padrão</span>
             </div>
             <div id="cozinheiraDiv">
-                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Cozinheira%20(20240825102621).png?raw=true">
+                <img src="https://github.com/PiperOneShot/Mousix/blob/main/Cozinheira%20(20240825102621).png?raw=true">
                 <span onclick="selectSkin('cozinheira')">Cozinheira</span>
             </div>
             <div id="estudanteDiv">
-                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Estudante%20(20240825102511).png?raw=true">
+                <img src="https://github.com/PiperOneShot/Mousix/blob/main/Estudante%20(20240825102511).png?raw=true">
                 <span onclick="selectSkin('estudante')">Estudante</span>
             </div>
             <div id="esportistaDiv">
-                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Tenista%20(20240825010309).png?raw=true">
+                <img src="https://github.com/PiperOneShot/Mousix/blob/main/Tenista%20(20240825010309).png?raw=true">
                 <span onclick="selectSkin('esportista')">Esportista</span>
             </div>
         </div>
         <h2>Prata</h2>
         <div class="prataSkin">
             <div id="feiticeiraDiv">
-                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Feiticeira%20%20(20240825102418).png?raw=true">
+                <img src="https://github.com/PiperOneShot/Mousix/blob/main/Feiticeira%20%20(20240825102418).png?raw=true">
                 <span onclick="selectSkin('feiticeira')">Feiticeira</span>
             </div>
             <div id="hkDiv">
-                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/HK%20(20240825034919).png?raw=true">
+                <img src="https://github.com/PiperOneShot/Mousix/blob/main/HK%20(20240825034919).png?raw=true">
                 <span onclick="selectSkin('hk')">Hello Kitty</span>
             </div>
             <div id="orientalDiv">
-                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Oriental%20(20240825102453).png?raw=true">
+                <img src="https://github.com/PiperOneShot/Mousix/blob/main/Oriental%20(20240825102453).png?raw=true">
                 <span onclick="selectSkin('oriental')">Oriental</span>
             </div>
         </div>
         <h2>Ouro</h2>
         <div class="ouroSkin">
             <div id="primaveraDiv">
-                <img oncontextmenu="return false;" draggable="false" src="https://github.com/PiperOneShot/Mousix/blob/main/Primavera%20%20(20240825053941).png?raw=true">
+                <img src="https://github.com/PiperOneShot/Mousix/blob/main/Primavera%20%20(20240825053941).png?raw=true">
                 <span onclick="selectSkin('primavera')">Primavera</span>
             </div>
         </div>
@@ -1148,6 +1194,78 @@
             document.getElementById('textPause').classList.add('active')
         }
     }
+
+    // Alternar entre os menus de cadastro e login
+    const cadastroButton = document.getElementById("cadastro");
+        const loginButton = document.getElementById("login");
+        const cadastroMenu = document.getElementById("cadastroMenu");
+        const loginMenu = document.getElementById("loginMenu");
+        const loginPopUp = document.getElementById("loginPopUp");
+
+        cadastroButton.addEventListener("click", () => {
+            loginPopUp.classList.add('closed')
+            cadastroMenu.classList.add('open')
+        });
+
+        loginButton.addEventListener("click", () => {
+            loginPopUp.classList.add('closed')
+            loginMenu.classList.add('open')
+        });
+
+        // Mostrar ou ocultar senhas
+        const mostrarSenhaCad = document.getElementById("mostrarSenhaCad");
+        const mostrarSenhaLog = document.getElementById("mostrarSenhaLog");
+        const senhaCadastro = document.getElementById("senhaCadastro");
+        const senhaLogin = document.getElementById("senhaLogin");
+
+        mostrarSenhaCad.addEventListener("click", () => {
+            senhaCadastro.type = senhaCadastro.type === "password" ? "text" : "password";
+        });
+
+        mostrarSenhaLog.addEventListener("click", () => {
+            senhaLogin.type = senhaLogin.type === "password" ? "text" : "password";
+        });
+
+        // Função de cadastro
+        const submitCadastro = document.getElementById("submitCadastro");
+        submitCadastro.addEventListener("click", () => {
+            const nome = document.getElementById("nomeCadastro").value;
+            const email = document.getElementById("emailCadastro").value;
+            const senha = document.getElementById("senhaCadastro").value;
+
+            if (nome && email && senha) {
+                const userData = {
+                    nome: nome,
+                    email: email,
+                    senha: senha
+                };
+                localStorage.setItem(email, JSON.stringify(userData));
+                alert("Cadastro realizado com sucesso!");
+                cadastroMenu.classList.remove('open')
+                loginPopUp.classList.add('open')
+            } else {
+                alert("Por favor, preencha todos os campos.");
+            }
+        });
+
+        // Função de login
+        const submitLogin = document.getElementById("submitLogin");
+        submitLogin.addEventListener("click", () => {
+            const email = document.getElementById("emailLogin").value;
+            const senha = document.getElementById("senhaLogin").value;
+
+            const storedUser = localStorage.getItem(email);
+            if (storedUser) {
+                const userData = JSON.parse(storedUser);
+                if (userData.senha === senha) {
+                    alert("Login realizado com sucesso!");
+                } else {
+                    alert("Senha incorreta.");
+                }
+            } else {
+                alert("Usuário não encontrado.");
+            }
+        });
     </script>
 </body>
 </html>
