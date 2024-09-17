@@ -453,13 +453,14 @@
             width: 100%;
         }
 
+        #account {
+            display: block;
+        }
+
         #account div {
-            display: grid;
-            grid-template-areas: 
-                'conquista texto'
-                'progresso texto'
-            ;
-            grid-template-columns: 75% 25%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             width: 100%;
             border-radius: 15px;
             background-color: var(--mediumbrown);
@@ -467,27 +468,25 @@
             box-sizing: border-box;
             margin-bottom: 15px;
         }
-        #account h2 {
-            grid-area: conquista;
+        #account div h2 {
+            width: 75%;
             background-color: var(--brown);
             border-radius: 15px;
-        }
-
-        #account progress {
-            grid-area: progresso;
-        }
-
-        #account p {
-            grid-area: texto;
-            border-radius: 15px;
-            background-color: var(--brown);
         }
         #account div * {
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 5px;
+            height: 7.5vh;
             padding: 10px;
+        }
+        #account img {
+            width: auto;
+            padding-left: 7.5%;
+            padding-right: 7.5%;
+            background-color: var(--brown);
+            border-radius: 15px;
         }
         #loading-screen {
             position: fixed;
@@ -527,6 +526,15 @@
         :focus {
             outline: none;
         }
+
+        .mousse, .quest {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .mousse.available, .quest.available {
+            opacity: 1;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -564,9 +572,9 @@
             <h2>Inventário de Mousses</h2>
             <p style="width: 100%;">Compre mousses da Mousix se adquirir mais!</p>
             <div class="mousses">
-                <img onclick="feedMou(this)" src="https://github.com/PiperOneShot/Mousix/blob/main/Mousse_Jogo.png?raw=true">
-                <img onclick="feedMou(this)" src="https://github.com/PiperOneShot/Mousix/blob/main/Mousse_Jogo.png?raw=true">
-                <img onclick="feedMou(this)" src="https://github.com/PiperOneShot/Mousix/blob/main/Mousse_Jogo.png?raw=true">
+                <img class="mousse" id="1" src="https://github.com/PiperOneShot/Mousix/blob/main/Mousse_Jogo.png?raw=true">
+                <img class="mousse" id="2" src="https://github.com/PiperOneShot/Mousix/blob/main/Mousse_Jogo.png?raw=true">
+                <img class="mousse" id="3" src="https://github.com/PiperOneShot/Mousix/blob/main/Mousse_Jogo.png?raw=true">
             </div>
         </div>
     
@@ -584,11 +592,11 @@
         </div>
 
         <div id="collection" class="menuSecondary">
-            <p>A cada mousse, você pode sortear 2 ou 3 visuais! Quem sabe, você descubra o segredo.</p>
+            <p>Nada por aqui.</p>
         </div>
 
         <div id="discount" class="menuSecondary">
-            <p>Se você conseguir completar as conquistas abaixo, você ganhará 50% de desconto no próximo Mousse!</p>
+            <p>Se você conseguir completar as conquistas abaixo, você ganhará mousses para alimentar a Mou!</p>
         </div>
 
         <span class="greenBar"></span>
@@ -702,7 +710,6 @@
         </div>
     </main>
 
-
     <!-- Skins -->
     <main id="skins" style="display:none;">
         <h1>Visuais</h1>
@@ -752,19 +759,17 @@
     <!-- Account -->
     <main id="account" style="display:none;">
         <h1>Conquistas</h1>
-        <div>
-            <h2>Preencha toda barra de amizade</h2>
-            <progress id="a"></progress>
-            <p id="fA">0/3</p>
+        <div >
+            <h2>Jogue o jogo e obtenha 200 pontos</h2>
+            <img class="quest" id="Q1" src="https://github.com/PiperOneShot/Mousix/blob/main/Mousse_Jogo.png?raw=true">
         </div>
         <div>
-            <h2>Preencha toda barra de felicidade</h2>
-            <progress id="f"></progress>
-            <p id="fP">0/4</p>
+            <h2>Verifique a aba sobre nós</h2>
+            <img class="quest" id="Q2" src="https://github.com/PiperOneShot/Mousix/blob/main/Mousse_Jogo.png?raw=true">
         </div>
         <div>
-            <h2>Consiga o visual secreto</h2>
-            <p style="font-size: small;">Incompleto</p>
+            <h2>Experimente todos os visuais</h2>
+            <img class="quest" id="Q3" src="https://github.com/PiperOneShot/Mousix/blob/main/Mousse_Jogo.png?raw=true">
         </div>
     </main>
     
@@ -773,7 +778,7 @@
     <nav class="toolbar">
         <button class="btnMenu" onclick="openMenu('food', this, 'Alimentação')"><i class="fas fa-utensils"></i></button>
         <button class="btnMenu" onclick="openMenu('games', this, 'Jogo')"><i class="fas fa-gamepad"></i></button>
-        <button class="btnMenu" onclick="openMenu('home', this, 'Página Inicial')"><i class="fas fa-house"></i></button>
+        <button class="btnMenu active" onclick="openMenu('home', this, 'Página Inicial')"><i class="fas fa-house"></i></button>
         <button class="btnMenu" onclick="openMenu('skins', this, 'Skins')"><i class="fas fa-shirt"></i></button>
         <button class="btnMenu" onclick="openMenu('account', this, 'Conta')"><i class="fas fa-user"></i></button>
     </nav>
@@ -787,6 +792,9 @@
             const mou = document.getElementById('mou');
             let mainTitle = document.getElementById('H1');
             let mainM2 = document.getElementById('openMenuSecondaryBtn');
+
+            let questSubmenu = []
+            let moussesInventoryCounter = 0
 
             // Barras 
             const amizadeHeader = document.querySelector("header #a");
@@ -907,47 +915,77 @@
             });
 
             let selectSubMenu = document.getElementById(submenu);
+            if (questSubmenu.includes(submenu) == false) {
+                questSubmenu.push(submenu)
+            }
+            if (questSubmenu.length == 6) {
+                questComplete('Q2');
+            }
             selectSubMenu.style.display = 'block';
             selectSubMenu.style.paddingBottom = '87.5px';
 
             mou.style.display = 'none';
         }
-
+        let valueAmizade = 0
         function updateAmizadeBar(incrementValue) {
-            amizadeHeader.value = Math.min(amizadeHeader.value + incrementValue, 100);
-            amizadeAccount.value = amizadeHeader.value;
-        
-            const currentProgress = Math.floor(amizadeHeader.value / 33.3);
-            amizadeTextHeader.innerHTML = `${currentProgress}/3`;
-            amizadeTextAccount.innerHTML = `${currentProgress}/3`;
+            amizadeHeader.value += 33.4
+            amizadeTextHeader.innerHTML = `${valueAmizade += 1}/3`;
         }
         
         function updateFelicidadeBar(incrementValue) {
             felicidadeHeader.value = Math.min(felicidadeHeader.value + incrementValue, 100);
-            felicidadeAccount.value = felicidadeHeader.value; // Sincroniza com a barra de felicidade da conta
         
             const currentProgress = Math.floor(felicidadeHeader.value / 25);
             felicidadeTextHeader.innerHTML = `${currentProgress}/4`;
-            felicidadeTextAccount.innerHTML = `${currentProgress}/4`;
         }
 
         // Alimentação
-        function feedMou(btn) {
-            const incrementValue = 33.4;
-            updateAmizadeBar(incrementValue);
-        
-            if (amizadeHeader.value >= 33.4) {
-                btn.onclick = null;
-                btn.style.opacity = '0.5';
-                btn.style.cursor = 'not-allowed';
-            }
-        }
+function feedMou(btn) {
+    const incrementValue = 33.4;
+    updateAmizadeBar();
+    
+    if (amizadeHeader.value >= 33.4) {
+        btn.onclick = null;
+        btn.classList.remove('available'); // Corrigido de 'mousse' para 'btn'
+    }
+
+}
+
+function questComplete(btnId) {
+    let btn = document.getElementById(btnId)
+    btn.classList.add('available')
+    btn.onclick = function() {
+        getMousse(this);
+        btn.classList.remove('available')
+        btn.onclick = null;
+    }
+}
+
+function getMousse(btn) {
+    moussesInventoryCounter += 1;
+
+    let mousse = document.getElementById(String(moussesInventoryCounter));
+    mousse.classList.add('available');
+    mousse.onclick = function() {
+        feedMou(this)
+    }
+}
+
+let skinsSelected = []
 
         // Skins
         function selectSkin(skinName) {
             const div = document.getElementById(`${skinName}Div`);
             const imgSrc = div.querySelector('img').src;
             mou.src = imgSrc;
+
+            if (skinsSelected.includes(skinName) == false) {
+                skinsSelected.push(skinName)
+            }
+
+            if (skinsSelected.length >= 7) {
+                questComplete('Q3')
+            }
         }
 
         // Jogo
@@ -1106,7 +1144,7 @@
                 if (!isGamePaused) {
                     dropFood();
                 }
-            }, 1250);
+            }, 1000);
         }
 
         // Pontuação
@@ -1119,6 +1157,9 @@
             if (validScores.includes(score) && !scoresChecked.includes(score)) {
                 updateFelicidadeBar(25);
                 scoresChecked.push(score);
+            }
+            if (score == 200) {
+                questComplete('Q1')
             }
         }
 
@@ -1186,77 +1227,7 @@
         }
     }
 
-    // Alternar entre os menus de cadastro e login
-    const cadastroButton = document.getElementById("cadastro");
-        const loginButton = document.getElementById("login");
-        const cadastroMenu = document.getElementById("cadastroMenu");
-        const loginMenu = document.getElementById("loginMenu");
-        const loginPopUp = document.getElementById("loginPopUp");
 
-        cadastroButton.addEventListener("click", () => {
-            loginPopUp.classList.add('closed')
-            cadastroMenu.classList.add('open')
-        });
-
-        loginButton.addEventListener("click", () => {
-            loginPopUp.classList.add('closed')
-            loginMenu.classList.add('open')
-        });
-
-        // Mostrar ou ocultar senhas
-        const mostrarSenhaCad = document.getElementById("mostrarSenhaCad");
-        const mostrarSenhaLog = document.getElementById("mostrarSenhaLog");
-        const senhaCadastro = document.getElementById("senhaCadastro");
-        const senhaLogin = document.getElementById("senhaLogin");
-
-        mostrarSenhaCad.addEventListener("click", () => {
-            senhaCadastro.type = senhaCadastro.type === "password" ? "text" : "password";
-        });
-
-        mostrarSenhaLog.addEventListener("click", () => {
-            senhaLogin.type = senhaLogin.type === "password" ? "text" : "password";
-        });
-
-        // Função de cadastro
-        const submitCadastro = document.getElementById("submitCadastro");
-        submitCadastro.addEventListener("click", () => {
-            const nome = document.getElementById("nomeCadastro").value;
-            const email = document.getElementById("emailCadastro").value;
-            const senha = document.getElementById("senhaCadastro").value;
-
-            if (nome && email && senha) {
-                const userData = {
-                    nome: nome,
-                    email: email,
-                    senha: senha
-                };
-                localStorage.setItem(email, JSON.stringify(userData));
-                alert("Cadastro realizado com sucesso!");
-                cadastroMenu.classList.remove('open')
-                loginPopUp.classList.add('open')
-            } else {
-                alert("Por favor, preencha todos os campos.");
-            }
-        });
-
-        // Função de login
-        const submitLogin = document.getElementById("submitLogin");
-        submitLogin.addEventListener("click", () => {
-            const email = document.getElementById("emailLogin").value;
-            const senha = document.getElementById("senhaLogin").value;
-
-            const storedUser = localStorage.getItem(email);
-            if (storedUser) {
-                const userData = JSON.parse(storedUser);
-                if (userData.senha === senha) {
-                    alert("Login realizado com sucesso!");
-                } else {
-                    alert("Senha incorreta.");
-                }
-            } else {
-                alert("Usuário não encontrado.");
-            }
-        });
     </script>
 </body>
 </html>
