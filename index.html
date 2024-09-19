@@ -579,7 +579,7 @@
         </div>
     
         <div id="aboutUs" class="menuSecondary">
-            <button onclick="openSubMenu('about', 'Quem somos?')">Quem somos?</button>
+            <button onclick="openSubMenu('sobre', 'Quem somos?')">Quem somos?</button>
             <button onclick="openSubMenu('ls', 'Logomarca e Slogan')">Logomarca e Slogan</button>
             <button onclick="openSubMenu('mvv', 'Missão, Visão e Valores')">Missão, Visão e Valores</button>
             <button onclick="openSubMenu('product', 'Produto')">Produto</button>
@@ -625,7 +625,7 @@
         
     </main>
 
-    <main id="about" class="submenu" style="display: none;">
+    <main id="sobre" class="submenu" style="display: none;">
         <h1>Quem somos?</h1>
         <p>
             A Mousix é uma empresa inovadora, criada pelos alunos do 6º Ano E da Germinare Business.<br><br>
@@ -918,17 +918,20 @@
             });
 
             let selectSubMenu = document.getElementById(submenu);
+
+            selectSubMenu.style.display = 'block';
+            selectSubMenu.style.paddingBottom = '87.5px';
+
             if (!questSubmenu.includes(submenu)) {
                 questSubmenu.push(submenu);
             }
             if (questSubmenu.length == 6) {
                 questComplete('Q2');
             }
-            selectSubMenu.style.display = 'block';
-            selectSubMenu.style.paddingBottom = '87.5px';
 
             mou.style.display = 'none';
         }
+
 
         let valueAmizade = 0;
         function updateAmizadeBar(incrementValue) {
@@ -1260,7 +1263,7 @@
         // Função para obter o título do submenu com base no ID
         function getSubmenuTitle(submenuId) {
             const titles = {
-                'about': 'Quem somos?',
+                'sobre': 'Quem somos?',
                 'ls': 'Logomarca e Slogan',
                 'mvv': 'Missão, Visão e Valores',
                 'product': 'Produto',
