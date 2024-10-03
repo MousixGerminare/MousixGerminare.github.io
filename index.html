@@ -1068,70 +1068,78 @@
 
         // Comidas
         function dropFood() {
-            if (isGamePaused) return;
+    if (isGamePaused) return;
 
-            const food = document.createElement('img');
-            food.classList.add('food');
+    const food = document.createElement('img');
+    food.classList.add('food');
 
-            // Randomize food type
-            const foodType = Math.floor(Math.random() * 3) + 1;
-            if (foodType === 1) {
-                food.src = 'https://github.com/PiperOneShot/Mousix/blob/main/image.png?raw=true';
-            } else if (foodType === 2) {
-                food.src = 'https://github.com/PiperOneShot/Mousix/blob/main/burritoSwift.png?raw=true';
-            } else {
-                food.src = 'https://github.com/PiperOneShot/Mousix/blob/main/pudimSwift.png?raw=true';
+    // Determinar o tipo de comida
+    const foodType = Math.floor(Math.random() * 3) + 1;
+    if (foodType === 1) {
+        food.src = 'https://github.com/PiperOneShot/Mousix/blob/main/image.png?raw=true';
+    } else if (foodType === 2) {
+        food.src = 'https://github.com/PiperOneShot/Mousix/blob/main/burritoSwift.png?raw=true';
+    } else {
+        food.src = 'https://github.com/PiperOneShot/Mousix/blob/main/pudimSwift.png?raw=true';
+    }
+
+    // Definir a posição inicial da comida
+    let validPosition = false;
+    let attempts = 0;
+    while (!validPosition && attempts < 100) {
+        food.style.left = Math.random() * (gameArea.clientWidth - 40) + 'px';
+        food.style.top = '0px';
+        validPosition = true;
+
+        const existingFoods = document.querySelectorAll('.food');
+        existingFoods.forEach(existingFood => {
+            const existingFoodRect = existingFood.getBoundingClientRect();
+            const newFoodRect = food.getBoundingClientRect();
+
+            const distanceX = Math.abs(existingFoodRect.left - newFoodRect.left);
+            const distanceY = Math.abs(existingFoodRect.top - newFoodRect.top);
+
+            if (distanceX < 60 && distanceY < 60) {
+                validPosition = false;
             }
+        });
 
-            let validPosition = false;
-            let attempts = 0;
-            while (!validPosition && attempts < 100) {
-                food.style.left = Math.random() * (gameArea.clientWidth - 40) + 'px';
-                food.style.top = '0px';
-                validPosition = true;
-                
-                const existingFoods = document.querySelectorAll('.food');
-                existingFoods.forEach(existingFood => {
-                    const existingFoodRect = existingFood.getBoundingClientRect();
-                    const newFoodRect = food.getBoundingClientRect();
+        attempts++;
+    }
 
-                    const distanceX = Math.abs(existingFoodRect.left - newFoodRect.left);
-                    const distanceY = Math.abs(existingFoodRect.top - newFoodRect.top);
+    gameArea.appendChild(food);
 
-                    if (distanceX < 60 && distanceY < 60) {
-                        validPosition = false;
-                    }
-                });
+    // Função para mover a comida
+    const foodFallInterval = setInterval(() => {
+        if (isGamePaused) return;
 
-                attempts++;
-            }
+        const foodTop = parseInt(window.getComputedStyle(food).getPropertyValue('top')) || 0;
+        if (foodTop < gameArea.clientHeight - 40) {
+            food.style.top = (foodTop + 10) + 'px';
 
-            gameArea.appendChild(food);
+            if (checkCollision(player, food)) {
+                clearInterval(foodFallInterval);
+                gameArea.removeChild(food);
 
-            let foodFallInterval = setInterval(() => {
-                if (isGamePaused) return;
-
-                const foodTop = parseInt(window.getComputedStyle(food).getPropertyValue('top')) || 0;
-                if (foodTop < gameArea.clientHeight - 40) {
-                    food.style.top = (foodTop + 10) + 'px';
-
-                    if (checkCollision(player, food)) {
-                        clearInterval(foodFallInterval);
-                        gameArea.removeChild(food);
-
-                        if (foodType === 1) {
-                            updateScore(2);
-                        } else {
-                            updateScore(-1);
-                        }
-                        scoreDisplay.innerText = `Pontuação: ${score}`;
-                    }
+                if (foodType === 1) {
+                    updateScore(2);
                 } else {
-                    clearInterval(foodFallInterval);
-                    gameArea.removeChild(food);
+                    updateScore(-1);
                 }
-            }, 50);
+                scoreDisplay.innerText = `Pontuação: ${score}`;
+            }
+        } else {
+            clearInterval(foodFallInterval);
+            gameArea.removeChild(food);
         }
+    }, 50);
+
+    // Agendar a próxima geração de comida
+    foodGenerationTimeout = setTimeout(() => {
+        foodGenerationTimeout = null; // Resetar o timeout atual
+        dropFood();
+    }, 675); // Intervalo de 1500 ms
+}
 
         function checkCollision(player, food) {
             const playerRect = player.getBoundingClientRect();
@@ -1149,20 +1157,48 @@
             const gamesMenu = document.getElementById('games');
             if (gamesMenu.style.display === 'block' && document.getElementById('textPause').classList.contains('active')) {
                 isGamePaused = true;  
-                clearInterval(foodInterval);  // Pausar a queda das comidas
+                clearInterval(foodInterval);  
             } else {
                 isGamePaused = false;
-                startDroppingFood();  // Retomar a queda das comidas
+                startDroppingFood(); 
             }
         }
 
+        let foodGenerationTimeout;
+
+        // Função para iniciar a geração de comida
         function startDroppingFood() {
-            foodInterval = setInterval(() => {
-                if (!isGamePaused) {
-                    dropFood();
-                }
-            }, 1500);
+            if (!isGamePaused && !foodGenerationTimeout) {
+                dropFood();
+            }
         }
+
+        // Função para pausar a geração de comida
+function stopDroppingFood() {
+    clearTimeout(foodGenerationTimeout);
+    foodGenerationTimeout = null;
+}
+
+// Atualizar a função togglePause para gerenciar a geração de comida
+function togglePause() {
+    if (isGamePaused) {
+        isGamePaused = false;
+        startDroppingFood(); 
+        document.getElementById('textPause').classList.remove('active');
+    } else {
+        isGamePaused = true;
+        stopDroppingFood();
+        document.getElementById('textPause').classList.add('active');
+    }
+
+    saveGameData();
+}
+
+function stopDroppingFood() {
+    clearTimeout(foodGenerationTimeout);
+    foodGenerationTimeout = null;
+}
+
 
         // Pontuação
         startDroppingFood();
@@ -1188,7 +1224,6 @@
             saveGameData();
         }
 
-        // Função para salvar os dados no localStorage
         function saveGameData() {
             const gameData = {
                 score: score,
@@ -1202,41 +1237,34 @@
                 currentSkin: mou.src
             };
             localStorage.setItem('mousixGameData', JSON.stringify(gameData));
-            console.log("Dados salvos!");
         }
 
-        // Função para carregar os dados do localStorage
         function loadGameData() {
             const savedData = localStorage.getItem('mousixGameData');
             if (savedData) {
                 const gameData = JSON.parse(savedData);
                 
-                // Restaurar pontuação
                 score = gameData.score || 0;
                 scoreDisplay.innerText = `Pontuação: ${score}`;
                 
-                // Restaurar conquistas
                 if (gameData.questSubmenu) {
                     questSubmenu = gameData.questSubmenu;
                     questSubmenu.forEach(submenu => {
-                        // Marcar a conquista como completada
                         let btn = document.querySelector(`button[onclick="openSubMenu('${submenu}', '${getSubmenuTitle(submenu)}')"]`);
                         if (btn) {
-                            btn.classList.add('available'); // Adiciona a classe para estilização
-                            btn.disabled = true; // Desabilita o botão para impedir novas interações
+                            btn.classList.add('available'); 
+                            btn.disabled = true;
                         }
                     });
                 }
                 
-                // Restaurar barras de progresso
                 valueAmizade = gameData.amizadeValue || 0;
-                amizadeHeader.value = valueAmizade * 33.4; // Cada valorAmizade incrementa 33.4%
+                amizadeHeader.value = valueAmizade * 33.4; 
                 amizadeTextHeader.innerHTML = `${valueAmizade}/3`;
                 
                 felicidadeHeader.value = gameData.felicidadeValue || 0;
                 felicidadeTextHeader.innerHTML = gameData.felicidadeText || `0/4`;
                 
-                // Restaurar inventário de mousses
                 moussesInventoryCounter = gameData.moussesInventoryCounter || 0;
                 for (let i = 1; i <= moussesInventoryCounter; i++) {
                     let mousse = document.getElementById(String(i));
@@ -1248,19 +1276,13 @@
                     }
                 }
                 
-                // Restaurar skins selecionadas
                 skinsSelected = gameData.skinsSelected || [];
                 if (gameData.currentSkin) {
                     mou.src = gameData.currentSkin;
-                }
-                
-                console.log("Dados carregados!");
-            } else {
-                console.log("Nenhum dado salvo encontrado.");
+                }    
             }
         }
 
-        // Função para obter o título do submenu com base no ID
         function getSubmenuTitle(submenuId) {
             const titles = {
                 'sobre': 'Quem somos?',
@@ -1273,17 +1295,14 @@
             return titles[submenuId] || 'Submenu';
         }
 
-        // Resetar Jogo
         function resetGameData() {
             localStorage.removeItem('mousixGameData');
             location.reload(); // Recarrega a página para reiniciar o jogo
         }
 
-        // Carregar os dados quando o DOM estiver pronto
         document.addEventListener('DOMContentLoaded', function () {
             const progressBar = document.querySelector('.progress');
             const loadingScreen = document.getElementById('loading-screen');
-            // const content = document.getElementById('content'); // Removido, pois não existe no HTML
             const loadingText = document.getElementById('loading-text');
 
             const frases = [
@@ -1321,10 +1340,9 @@
 
                 setTimeout(function () {
                     loadingScreen.style.display = 'none';
-                    // content.style.display = 'block'; // Removido, pois não existe no HTML
                 }, 1000); 
 
-                loadGameData(); // Carregar os dados após a página ser carregada
+                loadGameData();
             };
         });
 
@@ -1339,7 +1357,7 @@
                 document.getElementById('textPause').classList.add('active');
             }
 
-            saveGameData(); // Salvar o estado de pausa
+            saveGameData();
         }
     </script>
 </body>
