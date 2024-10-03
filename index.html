@@ -830,6 +830,8 @@
             let score = 0;
             const scoreDisplay = document.getElementById('score');
 
+            let availableMousses = [];
+
         // Funções Gerais
         function openMenu(menu, button) {
             let selectMenu = document.getElementById(menu);
@@ -956,9 +958,18 @@
             const incrementValue = 33.4;
             updateAmizadeBar(incrementValue);
             
+            const mousseId = btn.id; // Obtém o ID da mousse que está sendo alimentada
+            const index = availableMousses.indexOf(mousseId);
+            if (index > -1) {
+                availableMousses.splice(index, 1); // Remove o ID do array
+            }
+            
             btn.onclick = null;
             btn.classList.remove('available');
+
+            saveGameData();
         }
+
 
         function questComplete(btnId) {
             let btn = document.getElementById(btnId);
@@ -981,10 +992,12 @@
                 mousse.onclick = function() {
                     feedMou(this);
                 }
+                availableMousses.push(moussesInventoryCounter.toString());
             }
 
             saveGameData();
         }
+
 
         let skinsSelected = [];
 
@@ -1225,63 +1238,72 @@ function stopDroppingFood() {
         }
 
         function saveGameData() {
-            const gameData = {
-                score: score,
-                questSubmenu: questSubmenu,
-                amizadeValue: valueAmizade,
-                felicidadeValue: felicidadeHeader.value,
-                felicidadeText: felicidadeTextHeader.innerHTML,
-                amizadeText: amizadeTextHeader.innerHTML,
-                moussesInventoryCounter: moussesInventoryCounter,
-                skinsSelected: skinsSelected,
-                currentSkin: mou.src
-            };
-            localStorage.setItem('mousixGameData', JSON.stringify(gameData));
-        }
+    const gameData = {
+        score: score,
+        questSubmenu: questSubmenu,
+        amizadeValue: valueAmizade,
+        felicidadeValue: felicidadeHeader.value,
+        felicidadeText: felicidadeTextHeader.innerHTML,
+        amizadeText: amizadeTextHeader.innerHTML,
+        moussesInventoryCounter: moussesInventoryCounter,
+        skinsSelected: skinsSelected,
+        currentSkin: mou.src,
+        availableMousses: availableMousses // Adiciona o array de mousses disponíveis
+    };
+    localStorage.setItem('mousixGameData', JSON.stringify(gameData));
+}
 
-        function loadGameData() {
-            const savedData = localStorage.getItem('mousixGameData');
-            if (savedData) {
-                const gameData = JSON.parse(savedData);
-                
-                score = gameData.score || 0;
-                scoreDisplay.innerText = `Pontuação: ${score}`;
-                
-                if (gameData.questSubmenu) {
-                    questSubmenu = gameData.questSubmenu;
-                    questSubmenu.forEach(submenu => {
-                        let btn = document.querySelector(`button[onclick="openSubMenu('${submenu}', '${getSubmenuTitle(submenu)}')"]`);
-                        if (btn) {
-                            btn.classList.add('available'); 
-                            btn.disabled = true;
-                        }
-                    });
+function loadGameData() {
+    const savedData = localStorage.getItem('mousixGameData');
+    if (savedData) {
+        const gameData = JSON.parse(savedData);
+        
+        score = gameData.score || 0;
+        scoreDisplay.innerText = `Pontuação: ${score}`;
+        
+        if (gameData.questSubmenu) {
+            questSubmenu = gameData.questSubmenu;
+            questSubmenu.forEach(submenu => {
+                let btn = document.querySelector(`button[onclick="openSubMenu('${submenu}', '${getSubmenuTitle(submenu)}')"]`);
+                if (btn) {
+                    btn.classList.add('available'); 
+                    btn.disabled = true;
                 }
-                
-                valueAmizade = gameData.amizadeValue || 0;
-                amizadeHeader.value = valueAmizade * 33.4; 
-                amizadeTextHeader.innerHTML = `${valueAmizade}/3`;
-                
-                felicidadeHeader.value = gameData.felicidadeValue || 0;
-                felicidadeTextHeader.innerHTML = gameData.felicidadeText || `0/4`;
-                
-                moussesInventoryCounter = gameData.moussesInventoryCounter || 0;
-                for (let i = 1; i <= moussesInventoryCounter; i++) {
-                    let mousse = document.getElementById(String(i));
-                    if (mousse) {
-                        mousse.classList.add('available');
-                        mousse.onclick = function() {
-                            feedMou(this);
-                        }
+            });
+        }
+        
+        valueAmizade = gameData.amizadeValue || 0;
+        amizadeHeader.value = valueAmizade * 33.4; 
+        amizadeTextHeader.innerHTML = `${valueAmizade}/3`;
+        
+        felicidadeHeader.value = gameData.felicidadeValue || 0;
+        felicidadeTextHeader.innerHTML = gameData.felicidadeText || `0/4`;
+        
+        moussesInventoryCounter = gameData.moussesInventoryCounter || 0;
+        availableMousses = gameData.availableMousses || [];
+        for (let i = 1; i <= moussesInventoryCounter; i++) {
+            let mousse = document.getElementById(String(i));
+            if (mousse) {
+                if (availableMousses.includes(String(i))) {
+                    mousse.classList.add('available');
+                    mousse.onclick = function() {
+                        feedMou(this);
                     }
+                } else {
+                    // Garante que a mousse não disponível não tenha a classe 'available' e não seja clicável
+                    mousse.classList.remove('available');
+                    mousse.onclick = null;
                 }
-                
-                skinsSelected = gameData.skinsSelected || [];
-                if (gameData.currentSkin) {
-                    mou.src = gameData.currentSkin;
-                }    
             }
         }
+        
+        skinsSelected = gameData.skinsSelected || [];
+        if (gameData.currentSkin) {
+            mou.src = gameData.currentSkin;
+        }    
+    }
+}
+
 
         function getSubmenuTitle(submenuId) {
             const titles = {
