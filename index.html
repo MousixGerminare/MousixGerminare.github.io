@@ -1216,6 +1216,21 @@ function stopDroppingFood() {
     foodGenerationTimeout = null;
 }
 
+        document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        // Aba perdeu o foco, pausa o jogo
+        if (!isGamePaused) {
+            togglePause(); // Pausar o jogo
+        }
+    } else {
+        // Aba voltou ao foco, despausa o jogo
+        if (isGamePaused) {
+            togglePause(); // Despausar o jogo
+        }
+    }
+});
+
+
 // Atualizar a função togglePause para gerenciar a geração de comida
 function togglePause() {
     if (isGamePaused) {
@@ -1343,7 +1358,7 @@ function loadGameData() {
 
         function resetGameData() {
             localStorage.removeItem('mousixGameData');
-            location.reload(); // Recarrega a página para reiniciar o jogo
+            location.reload();
         }
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -1367,7 +1382,7 @@ function loadGameData() {
 
             function Delay() {
                 loadingText.innerText = fraseAleatoria();
-                setTimeout(Delay, 3000); // Altera a frase a cada 3 segundos
+                setTimeout(Delay, 3000);
             }
 
             Delay();
