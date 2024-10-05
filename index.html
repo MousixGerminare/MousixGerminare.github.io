@@ -1053,6 +1053,21 @@
             clearInterval(moveInterval);
         }
 
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'a' || event.key === 'ArrowLeft') {
+                startMoveLeft();
+            } else if (event.key === 'd' || event.key === 'ArrowRight') {
+                startMoveRight();
+            }
+        });
+
+        document.addEventListener('keyup', function(event) {
+            if (event.key === 'a' || event.key === 'ArrowLeft' || event.key === 'd' || event.key === 'ArrowRight') {
+                stopMove();
+            }
+        });
+
+
         leftButton.addEventListener('mousedown', startMoveLeft);
         leftButton.addEventListener('mouseup', stopMove);
         rightButton.addEventListener('mousedown', startMoveRight);
