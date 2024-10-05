@@ -373,7 +373,7 @@
         /* Jogo */
         #gameArea {
             position: relative;
-            width: 100%;
+            max-width: 750px;
             height: 56.5vh;
             background-color: var(--lightbrown);
             border: 2px solid var(--brown);
@@ -410,12 +410,17 @@
             border-radius: 40%;
         }
 
-        #pause {
-            position: fixed;
-            top: 182.5px;
-            right: 7.5px;
+        .divPause {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            justify-content: end;
+            width: calc(100% - 20px);
+            max-width: 750px;
+            top: 180px;
+            left: 50%;
+            transform: translateX(-50%);
         }
-
         #textPause {
             display: none;
         }
@@ -443,7 +448,10 @@
             position: absolute;
             justify-content: space-between;
             width: calc(100% - 20px);
+            max-width: 750px;
             bottom: 14.5vh;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         #points :is(progress, div) {
@@ -616,7 +624,9 @@
             <button class="button" onmousedown="startMoveLeft()" onmouseup="stopMove()"><i class="fas fa-arrow-left"></i></button>
             <button class="button" onmousedown="startMoveRight()" onmouseup="stopMove()"><i class="fas fa-arrow-right"></i></button>
         </div>
-        <button id="pause" class="button" onclick="togglePause()"><i class="fas fa-pause"></i></button>
+        <div class="divPause">
+            <button id="pause" class="button" onclick="togglePause()"><i class="fas fa-pause"></i></button>
+        </div>
         <p id="textPause">Jogo Pausado</p>
     </main>
 
@@ -1206,21 +1216,6 @@ function stopDroppingFood() {
     foodGenerationTimeout = null;
 }
 
-        document.addEventListener('visibilitychange', function() {
-    if (document.hidden) {
-        // Aba perdeu o foco, pausa o jogo
-        if (!isGamePaused) {
-            togglePause(); // Pausar o jogo
-        }
-    } else {
-        // Aba voltou ao foco, despausa o jogo
-        if (isGamePaused) {
-            togglePause(); // Despausar o jogo
-        }
-    }
-});
-
-
 // Atualizar a função togglePause para gerenciar a geração de comida
 function togglePause() {
     if (isGamePaused) {
@@ -1348,7 +1343,7 @@ function loadGameData() {
 
         function resetGameData() {
             localStorage.removeItem('mousixGameData');
-            location.reload();
+            location.reload(); // Recarrega a página para reiniciar o jogo
         }
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -1372,7 +1367,7 @@ function loadGameData() {
 
             function Delay() {
                 loadingText.innerText = fraseAleatoria();
-                setTimeout(Delay, 3000);
+                setTimeout(Delay, 3000); // Altera a frase a cada 3 segundos
             }
 
             Delay();
