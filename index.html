@@ -909,38 +909,38 @@
             checkGameStatus();
         }
 
-        function openMenuSecondary(actualMenuSecondary, menuSecondaryBtn) {
-            const menu = document.getElementById(actualMenuSecondary);
-            menu.classList.toggle('open');
-            checkGameStatus();
-        }
+function openMenuSecondary(actualMenuSecondary, menuSecondaryBtn) {
+    const menu = document.getElementById(actualMenuSecondary);
+    menu.classList.toggle('open');
+    checkGameStatus();
+}
 
         function openSubMenu(submenu, title) {
-            const allMenuSecondary = document.querySelectorAll('.menuSecondary');
-            allMenuSecondary.forEach(menu => {
-                menu.classList.remove('open');
-            });
-            menus.forEach(element => {
-                element.style.paddingBottom = '0';
-            });
-            submenus.forEach(element => {
-                element.style.display = 'none';
-            });
+    const allMenuSecondary = document.querySelectorAll('.menuSecondary');
+    allMenuSecondary.forEach(menu => {
+        menu.classList.remove('open');
+    });
+    menus.forEach(element => {
+        element.style.paddingBottom = '0';
+    });
+    submenus.forEach(element => {
+        element.style.display = 'none';
+    });
 
-            let selectSubMenu = document.getElementById(submenu);
+    let selectSubMenu = document.getElementById(submenu);
 
-            selectSubMenu.style.display = 'block';
-            selectSubMenu.style.paddingBottom = '87.5px';
+    selectSubMenu.style.display = 'flex';
+    selectSubMenu.style.paddingBottom = '87.5px';
 
-            if (!questSubmenu.includes(submenu)) {
-                questSubmenu.push(submenu);
-            }
-            if (questSubmenu.length == 6) {
-                questComplete('Q2');
-            }
+    if (!questSubmenu.includes(submenu)) {
+        questSubmenu.push(submenu);
+    }
+    if (questSubmenu.length == 6) {
+        questComplete('Q2');
+    }
 
-            mou.style.display = 'none';
-        }
+    mou.style.display = 'none';
+}
 
 
         let valueAmizade = 0;
