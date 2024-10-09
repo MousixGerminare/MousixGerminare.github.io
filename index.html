@@ -929,7 +929,7 @@ function openMenuSecondary(actualMenuSecondary, menuSecondaryBtn) {
 
     let selectSubMenu = document.getElementById(submenu);
 
-    selectSubMenu.style.display = 'flex';
+    selectSubMenu.style.display = 'block';
     selectSubMenu.style.paddingBottom = '87.5px';
 
     if (!questSubmenu.includes(submenu)) {
@@ -966,7 +966,7 @@ function openMenuSecondary(actualMenuSecondary, menuSecondaryBtn) {
             const incrementValue = 33.4;
             updateAmizadeBar(incrementValue);
             
-            const mousseId = btn.id; // Obtém o ID da mousse que está sendo alimentada
+            const mousseId = btn.id; 
             const index = availableMousses.indexOf(mousseId);
             if (index > -1) {
                 availableMousses.splice(index, 1); // Remove o ID do array
