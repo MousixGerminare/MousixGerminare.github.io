@@ -587,12 +587,12 @@
         </div>
     
         <div id="aboutUs" class="menuSecondary">
-            <button onclick="openSubMenu('sobre', 'Quem somos?')">Quem somos?</button>
-            <button onclick="openSubMenu('ls', 'Logomarca e Slogan')">Logomarca e Slogan</button>
-            <button onclick="openSubMenu('mvv', 'Missão, Visão e Valores')">Missão, Visão e Valores</button>
-            <button onclick="openSubMenu('product', 'Produto')">Produto</button>
-            <button onclick="openSubMenu('storytelling', 'Storytelling')">Storytelling</button>
-            <button onclick="openSubMenu('team', 'Equipe')">Equipe</button>            
+            <button onclick="openSubMenu('sobre')">Quem somos?</button>
+            <button onclick="openSubMenu('ls')">Logomarca e Slogan</button>
+            <button onclick="openSubMenu('mvv')">Missão, Visão e Valores</button>
+            <button onclick="openSubMenu('product')">Produto</button>
+            <button onclick="openSubMenu('storytelling')">Storytelling</button>
+            <button onclick="openSubMenu('team')">Equipe</button>            
         </div>
 
         <div id="points" class="menuSecondary">
@@ -915,7 +915,7 @@ function openMenuSecondary(actualMenuSecondary, menuSecondaryBtn) {
     checkGameStatus();
 }
 
-        function openSubMenu(submenu, title) {
+function openSubMenu(submenu) {
     const allMenuSecondary = document.querySelectorAll('.menuSecondary');
     allMenuSecondary.forEach(menu => {
         menu.classList.remove('open');
@@ -1245,6 +1245,7 @@ function togglePause() {
     saveGameData();
 }
 
+
 function stopDroppingFood() {
     clearTimeout(foodGenerationTimeout);
     foodGenerationTimeout = null;
@@ -1302,7 +1303,7 @@ function loadGameData() {
         if (gameData.questSubmenu) {
             questSubmenu = gameData.questSubmenu;
             questSubmenu.forEach(submenu => {
-                let btn = document.querySelector(`button[onclick="openSubMenu('${submenu}', '${getSubmenuTitle(submenu)}')"]`);
+                let btn = document.querySelector(`button[onclick="openSubMenu('${submenu}'`);
                 if (btn) {
                     btn.classList.add('available'); 
                     btn.disabled = true;
@@ -1340,19 +1341,6 @@ function loadGameData() {
         }    
     }
 }
-
-
-        function getSubmenuTitle(submenuId) {
-            const titles = {
-                'sobre': 'Quem somos?',
-                'ls': 'Logomarca e Slogan',
-                'mvv': 'Missão, Visão e Valores',
-                'product': 'Produto',
-                'storytelling': 'Storytelling',
-                'team': 'Equipe'
-            };
-            return titles[submenuId] || 'Submenu';
-        }
 
         function resetGameData() {
             localStorage.removeItem('mousixGameData');
@@ -1404,20 +1392,6 @@ function loadGameData() {
                 loadGameData();
             };
         });
-
-        function togglePause() {
-            if (isGamePaused) {
-                isGamePaused = false;
-                startDroppingFood(); 
-                document.getElementById('textPause').classList.remove('active');
-            } else {
-                isGamePaused = true;
-                clearInterval(foodInterval);
-                document.getElementById('textPause').classList.add('active');
-            }
-
-            saveGameData();
-        }
     </script>
 </body>
 </html>
